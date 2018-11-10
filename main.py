@@ -17,8 +17,16 @@ async def bot():
         6667,
         ssl=False
     )
-    writer.write(b"NICK rigel-pycon\r\n")
+    writer.write(b"NICK rigel-pycon18\r\n")
     writer.write(b"USER Rigel * * *\r\n")
+    while not reader.at_eof():
+        line = await reader.readline()
+        line = line.decode('utf-8')
+        if line:
+            print(line)
+            if "001" in line:
+                writer.write(b"JOIN #pycoin18\r\n")
+                writer.write(b"NAMES #pycoin18\r\n")
 
 
 async def main():
