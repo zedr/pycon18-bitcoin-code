@@ -1,27 +1,32 @@
 #!/usr/bin/env python3
 import asyncio
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+NAME = "Rigel"
 
 
-def say(msg):
-    print(msg)
+def say(message):
+    print(message)
 
 
-def _main():
+async def main():
     while True:
-        msg = input("? ")
-        try:
-            cmd, arg = msg.split(" ")
-        except ValueError:
-            pass
-        else:
-            if cmd == "say":
-                say(arg)
+        line = await loop.run_in_executor(None, input, "? ")
+        cmd, *args = line.split(" ")
+        if cmd:
+            if cmd.lower() == "say":
+                message = " ".join(args)
+                say(message)
+            else:
+                logging.error("Unknown command: %s", cmd)
+
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    tasks = (_main(), )
+    tasks = (main(), )
     try:
         loop.run_until_complete(asyncio.gather(*tasks))
     except KeyboardInterrupt:
         pass
-
